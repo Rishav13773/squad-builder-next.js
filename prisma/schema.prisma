@@ -10,14 +10,15 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-   url      = env("DATABASE_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+   url      = env("POSTGRES_PRISMA_URL")
  
 }
 
 // User table
 model User {
   id             Int       @id @default(autoincrement())
-  username       String?
+  username       String?    @unique
   email          String?   @unique
   profileImage   String?    @map("profile_image")
   players        String[]  
