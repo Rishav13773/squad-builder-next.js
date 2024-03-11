@@ -17,16 +17,15 @@ datasource db {
 // User table
 model User {
   id             Int       @id @default(autoincrement())
-  username       String?    @unique
-  email          String?   @unique
-  profileImage   String?    @map("profile_image")
-  players        String[]  
+  username       String?
+  email          String?    @unique
+  profileImage   String?   @map("profile_image")
+  players        String[]
 }
 
-//Room table
+// Room table
 model Room {
   id             Int       @id @default(autoincrement())
   roomID         String?   @unique
   roomName       String?
 }
-
