@@ -68,6 +68,8 @@ type Storage = {
 // Optionally, UserMeta represents static/readonly metadata on each user, as
 // provided by your own custom auth back end (if used). Useful for data that
 // will not change during a session, like a user's name or avatar.
+// type UserMeta = BaseUserMeta;
+
 type UserMeta = {
   info: {
     name: string;
@@ -144,16 +146,16 @@ export const {
 );
 
 // Project-level hooks, use inside `LiveblocksProvider`
-export const {
-  suspense: {
-    LiveblocksProvider,
-    useMarkInboxNotificationAsRead,
-    useMarkAllInboxNotificationsAsRead,
-    useInboxNotifications,
-    useUnreadInboxNotificationsCount,
+// export const {
+//   suspense: {
+//     LiveblocksProvider,
+//     useMarkInboxNotificationAsRead,
+//     useMarkAllInboxNotificationsAsRead,
+//     useInboxNotifications,
+//     useUnreadInboxNotificationsCount,
 
-    // These hooks can be exported from either context
-    useUser,
-    useRoomInfo,
-  },
-} = createLiveblocksContext<UserMeta, ThreadMetadata>(client);
+//     // These hooks can be exported from either context
+//     useUser,
+//     useRoomInfo,
+//   },
+// } = createLiveblocksContext<UserMeta, ThreadMetadata>(client);
