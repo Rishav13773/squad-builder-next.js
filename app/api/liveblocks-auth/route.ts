@@ -4,6 +4,7 @@ import { Liveblocks } from "@liveblocks/node";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import test from "node:test";
+import { currentUser } from "@clerk/nextjs";
 
 const API_KEY: string = process.env.LIVEBLOCKS_SECRET_KEY || "";
 const liveblocks = new Liveblocks({
@@ -47,6 +48,7 @@ const liveblocks = new Liveblocks({
 
 export async function POST(request: Request) {
   // Get the current user from your database
+  const userName: any = await currentUser();
 
   const existingCookieObj = await cookies().get("user");
 
@@ -69,7 +71,12 @@ export async function POST(request: Request) {
 
   // Start an auth session inside your endpoint
   const session = liveblocks.prepareSession(
-    user?.id.toString()
+    user?.id.toString(),
+    {
+      userInfo: {
+        name: userName?.firstName,
+      },
+    }
     // Optional
   );
 

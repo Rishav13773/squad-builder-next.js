@@ -27,7 +27,7 @@ import useInterval from "@/hooks/useInterval";
 
 type Presence = any;
 type LiveCursorProps = {
-  others: readonly User<Presence, BaseUserMeta>[];
+  others: any;
 };
 
 type Position = {
@@ -45,6 +45,8 @@ function LiveModules({ others }: LiveCursorProps) {
   const inputRef: any = useRef(null);
   const broadcast = useBroadcastEvent();
   // const broadcast = useBroadcastEvent();
+
+  // console.log(others);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -115,14 +117,14 @@ function LiveModules({ others }: LiveCursorProps) {
         </form>
       )}
 
-      {others.map(({ connectionId, presence }) =>
+      {others.map(({ connectionId, presence, info }: any) =>
         presence.cursor ? (
           <Cursor
             key={connectionId}
             x={presence.cursor.x}
             y={presence.cursor.y}
             connectionId={connectionId}
-            name={user?.fullName}
+            name={info.name}
             keyState={keyState}
             others={others}
             presence={presence}

@@ -15,6 +15,7 @@ export function Cursor({
   presence,
   updateMyPresence,
 }: any) {
+  // console.log(presence);
   return (
     <>
       <svg
