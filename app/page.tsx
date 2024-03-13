@@ -6,9 +6,11 @@ import { useEffect } from "react";
 import { Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { saveUser } from "@/redux/slices/user-slices";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   const newUser = useSelector((state: any) => {
     state.user;
@@ -23,6 +25,7 @@ export default function Home() {
           (data) => {
             dispatch(saveUser(data));
             console.log("Redux state", data);
+            router.push(`/playground`);
           }
         );
 
