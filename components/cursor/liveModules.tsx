@@ -1,30 +1,29 @@
-"use client";
+"use client"; // Using client
 
+// Importing necessary hooks and components
 import {
   useBroadcastEvent,
   useEventListener,
   useMutation,
   useMyPresence,
+  useOthersListener,
   useStorage,
   useUpdateMyPresence,
-} from "@/liveblocks.config";
+} from "@/liveblocks.config"; // Custom Liveblocks configuration
 
-import React, { useEffect, useRef, useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import React, { useEffect, useRef, useState } from "react"; // React imports
+import { useUser } from "@clerk/nextjs"; // User authentication hook
 
-import { formations } from "@/positions/formations";
+import { message, Input, Tag } from "antd"; // Ant Design components
+import useInterval from "@/hooks/useInterval"; // Custom interval hook
 
-import { BaseUserMeta, User } from "@liveblocks/client";
-import FootballField from "../footballField";
-import FormationSelect from "../formationSelect";
-import { Cursor } from "./cursor";
-import SearchPlayer from "../player/searchPlayer";
-import LiveChatWindow from "../liveChatWidnow";
-import { Button, Input } from "antd";
-import { connectionIdToColor } from "@/lib/utils";
-import { Send } from "lucide-react";
-import useInterval from "@/hooks/useInterval";
+import { formations } from "@/positions/formations"; // Formations data import
+import { Cursor } from "./cursor"; // Cursor component
+import FootballField from "../footballField"; // Football field component
+import SearchPlayer from "../player/searchPlayer"; // Player search component
+import FormationSelect from "../formationSelect"; // Formation select component
 
+// Type definitions
 type Presence = any;
 type LiveCursorProps = {
   others: any;
@@ -35,19 +34,20 @@ type Position = {
   y: number;
 };
 
+// Function component definition
 function LiveModules({ others }: LiveCursorProps) {
+  // State variables initialization
   const userCount = others.length;
   const updateMyPresence = useUpdateMyPresence();
   const { user } = useUser();
   const [keyState, setKeyState] = useState("Escape");
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
   const inputRef: any = useRef(null);
   const broadcast = useBroadcastEvent();
-  // const broadcast = useBroadcastEvent();
+  const [messageApi, contextHolder] = message.useMessage();
 
-  // console.log(others);
-
+  // Effect hook for focusing input field on mount and handling keyboard events
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -67,28 +67,45 @@ function LiveModules({ others }: LiveCursorProps) {
     };
   }, [inputRef.current]);
 
-  //Funciton to update user presence when user type and send message
+  // Function to handle form submission
   async function handleSubmit(e: any) {
     e.preventDefault();
-    // console.log();
 
     await updateMyPresence({ message: e.target[0].value });
 
     broadcast({
-      // x: cursor?.x,
-      // y: cursor?.y,
       value: e.target[0].value,
     });
   }
 
-  ///Reseting the chat message////
+  // Interval hook for resetting chat message
   useInterval(async () => {
     await updateMyPresence({ message: "" });
   }, 12000);
 
+  const onEnter = (user: any) => {
+    messageApi.info(`${user.info.name} entered the room`);
+  };
+
+  useOthersListener(({ type, user, others }) => {
+    switch (type) {
+      case "enter":
+        onEnter(user);
+
+        break;
+
+      case "leave":
+        // `user` has left the room
+
+        break;
+    }
+  });
+
+  // Component rendering
   return (
     <div
       className="w-screen h-screen"
+      // Handling pointer events to update cursor position
       onPointerMove={(e) => {
         setPosition({
           x: e.clientX,
@@ -98,8 +115,7 @@ function LiveModules({ others }: LiveCursorProps) {
       }}
       onPointerLeave={() => updateMyPresence({ cursor: null })}
     >
-      {/* <h1>Total users: {userCount}</h1> */}
-
+      {/* Rendering chat input form when '/' key is pressed */}
       {keyState === "/" && (
         <form onSubmit={handleSubmit}>
           <div className="flex absolute z-50 mt-6">
@@ -117,6 +133,7 @@ function LiveModules({ others }: LiveCursorProps) {
         </form>
       )}
 
+      {/* Rendering cursors for other users */}
       {others.map(({ connectionId, presence, info }: any) =>
         presence.cursor ? (
           <Cursor
@@ -134,9 +151,17 @@ function LiveModules({ others }: LiveCursorProps) {
       )}
 
       <div className="flex">
-        <FootballField formation={formations} />
+        <div>
+          <div className="absolute z-50 p-1">
+            <Tag color="green">Total players: {userCount}</Tag>
+          </div>
+          {contextHolder}
 
-        {/* ///Side panel start here//// */}
+          {/* Rendering football field component */}
+          <FootballField formation={formations} />
+        </div>
+
+        {/* Rendering side panel with player search and formation select */}
         <aside className="absolute right-0 flex flex-col justify-center items-center mt-0 m-24 gap-8">
           <SearchPlayer />
           <FormationSelect />
@@ -146,4 +171,4 @@ function LiveModules({ others }: LiveCursorProps) {
   );
 }
 
-export default LiveModules;
+export default LiveModules; // Exporting the component

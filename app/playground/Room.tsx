@@ -5,6 +5,7 @@ import { RoomProvider } from "@/liveblocks.config";
 import { ClientSideSuspense } from "@liveblocks/react";
 import { LiveList, LiveObject } from "@liveblocks/client";
 import { formations } from "@/positions/formations";
+import Loading from "@/components/loading/loading";
 
 export function Room({
   children,
@@ -29,7 +30,7 @@ export function Room({
         formationIndexes: new LiveList(),
       }}
     >
-      <ClientSideSuspense fallback={<div>Loading…</div>}>
+      <ClientSideSuspense fallback={<Loading />}>
         {() => children}
       </ClientSideSuspense>
     </RoomProvider>

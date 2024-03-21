@@ -42,6 +42,7 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
   const [preIndex, setPreIndex] = useState<number>(-1);
   const [positionData, setPositionData] = useState<any>();
   const [swapFlag, setSwapFlag] = useState<boolean>(false);
+  const [livePlayerIndex, setLivePlayerIndex] = useState<number>();
 
   const benchPlayerList = useStorage((root) => root.players);
   const fieldPlayerList = useStorage((root) => root.fieldPlayers);
@@ -103,7 +104,7 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
         const updatedFormationState = formationState ? [...formationState] : [];
 
         setFormationState(updatedFormationState);
-        await updateList(newPlayer);
+        await addPlayerToField(newPlayer);
         await deleteFromBench(benchPlayer.playerIndex);
         await addtoIndexArray(selectedIndex);
         // console.log(formationState);
@@ -120,7 +121,7 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
     storage.get("players").delete(index);
   }, []);
 
-  const updateList = useMutation(({ storage }, newPlayer) => {
+  const addPlayerToField = useMutation(({ storage }, newPlayer) => {
     storage.get("fieldPlayers").push(newPlayer);
   }, []);
 
@@ -130,12 +131,12 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
 
   ///Swapping functions
   const getCurrPosition = (playerData: any) => {
-    console.log(
-      "positionData: ",
-      positionData?.positionData,
-      "Name : ",
-      positionData?.firstName
-    );
+    // console.log(
+    //   "positionData: ",
+    //   positionData?.positionData,
+    //   "Name : ",
+    //   positionData?.firstName
+    // );
 
     const newPlayer = {
       ...playerData,
@@ -154,9 +155,16 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
     return newPlayer;
   };
 
+  /**
+   * Swaps the positions of two players in the formation.
+   * @param index - The index of the player to be swapped.
+   */
   const swapPlayers = useMutation(
     async ({ storage }, index) => {
+      //to show swap and cancel text
       setSwapFlag((pre) => !pre);
+
+      // return if the same player is clicked
       if (index === preIndex) {
         setPreIndex(-1);
         return;
@@ -187,7 +195,7 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
   useEffect(() => {
     console.log(selectedIndex);
     handleHydrateList();
-  }, [selectedIndex]);
+  }, [selectedIndex, livePlayerIndex]);
 
   return (
     <div className="relative flex justify-start items-center ">
@@ -226,15 +234,6 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
         </Suspense>
       ))}
 
-      {/* {formationState?.map((player, index) => (
-        <PlayerCard
-          player={player}
-          uid={user?.id}
-          index={index}
-          setSlelectedIndex={setSlelectedIndex}
-        />
-      ))} */}
-
       {fieldPlayerList?.map((player, index) => (
         <Suspense
           key={index}
@@ -251,6 +250,7 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
             swapPlayers={swapPlayers}
             swapFlag={swapFlag}
             preIndex={preIndex}
+            setLivePlayerIndex={setLivePlayerIndex}
           />
         </Suspense>
       ))}

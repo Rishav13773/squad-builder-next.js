@@ -9,7 +9,14 @@ import { useMutation, useStorage } from "@/liveblocks.config";
 import { formations, initFormation } from "@/positions/formations";
 import axios from "axios";
 
-const LiveCards = ({ player, index, swapPlayers, swapFlag, preIndex }: any) => {
+const LiveCards = ({
+  player,
+  index,
+  swapPlayers,
+  swapFlag,
+  preIndex,
+  setLivePlayerIndex,
+}: any) => {
   const [flipped, setFlipped] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState(false);
   const [playerCoordinates, setPlayerCoordinates] = useState<any>();
@@ -74,12 +81,15 @@ const LiveCards = ({ player, index, swapPlayers, swapFlag, preIndex }: any) => {
     return (
       <div className="flex flex-col justify-center text-xs  font-semibold">
         <li
-          onClick={() => swapPlayers(index)}
+          onClick={() => {
+            // setLivePlayerIndex(index);
+            swapPlayers(index);
+          }}
           className="hover:bg-slate-200 rounded-md p-1 cursor-pointer flex gap-1"
         >
           <Repeat2 size={14} />
           {preIndex === index && swapFlag ? (
-            <span>Cancel</span>
+            <span onClick={() => setLivePlayerIndex(-1)}>Cancel</span>
           ) : (
             <span>Swap</span>
           )}
