@@ -19,6 +19,7 @@ export default function Home() {
     state.user;
   });
   // console.log("Redux state", newUser);
+  //fixed
 
   useEffect(() => {
     async function generateUser() {
