@@ -83,19 +83,23 @@ function LiveModules({ others }: LiveCursorProps) {
     await updateMyPresence({ message: "" });
   }, 12000);
 
-  const onEnter = (user: any) => {
-    messageApi.info(`${user.info.name} entered the room`);
+  const roomAction = (user: any, action: string) => {
+    if(action === "enter"){
+      messageApi.info(`${user.info.name} entered the room`);
+    }else{
+      messageApi.info(`${user.info.name} left the room`);
+    }
   };
 
   useOthersListener(({ type, user, others }) => {
     switch (type) {
       case "enter":
-        onEnter(user);
+        roomAction(user, "enter");
 
         break;
 
       case "leave":
-        // `user` has left the room
+        roomAction(user, "leave");
 
         break;
     }

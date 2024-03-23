@@ -47,7 +47,7 @@ const BenchCard = ({ player, index }: any) => {
         <div
           className="default_card glow_card w-[84px] h-[100px] flex flex-col justify-center items-center rounded-md"
           onClick={() => {
-            console.log("selectIndex");
+            // console.log("selectIndex");
             dispatch(
               savePlayer({ playerState: player.id, playerIndex: index })
             );

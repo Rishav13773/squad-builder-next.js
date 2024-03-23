@@ -61,7 +61,7 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
   useEventListener((eventData) => {
     if (eventData.event) {
       // Handle the "EMOJI" event
-      console.log("Received EMOJI event:", eventData);
+      // console.log("Received EMOJI event:", eventData);
       setPositionName(eventData.event.formationNameValue);
 
       // Update state or perform any necessary actions based on the event
@@ -171,7 +171,7 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
       }
 
       if (preIndex !== -1) {
-        console.log("reached");
+        // console.log("reached");
         let currData = fieldPlayerList[index];
         let currObj = await getCurrPosition(currData);
 
@@ -193,7 +193,7 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
   );
 
   useEffect(() => {
-    console.log(selectedIndex);
+    // console.log(selectedIndex);
     handleHydrateList();
   }, [selectedIndex, livePlayerIndex]);
 
