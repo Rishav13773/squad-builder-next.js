@@ -66,7 +66,6 @@ export default function Home() {
               )}
               {isSignedIn && (
                 <Button
-                  asChild
                   className="mt-8 inline-flex items-center px-5 py-2.5 text-center font-bold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500"
                   type="primary"
                 >
