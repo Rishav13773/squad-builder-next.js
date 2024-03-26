@@ -4,7 +4,6 @@ import { useOthers } from "@/liveblocks.config";
 
 const Live = () => {
   const others = useOthers();
-  console.log(others);
 
   return (
     <div className="absolute z-50">

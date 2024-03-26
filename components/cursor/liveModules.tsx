@@ -84,9 +84,9 @@ function LiveModules({ others }: LiveCursorProps) {
   }, 12000);
 
   const roomAction = (user: any, action: string) => {
-    if(action === "enter"){
+    if (action === "enter") {
       messageApi.info(`${user.info.name} entered the room`);
-    }else{
+    } else {
       messageApi.info(`${user.info.name} left the room`);
     }
   };

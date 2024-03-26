@@ -16,7 +16,7 @@ import { initFormation } from "@/positions/formations";
 import PlayerCard from "./player/playerCard";
 import Bench from "./bench";
 import LiveCards from "./player/liveCards";
-import { Spin } from "antd";
+import { Rate, Spin } from "antd";
 
 import { LoadingOutlined } from "@ant-design/icons";
 import { savePlayer } from "@/redux/slices/room-slices";
@@ -43,6 +43,8 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
   const [positionData, setPositionData] = useState<any>();
   const [swapFlag, setSwapFlag] = useState<boolean>(false);
   const [livePlayerIndex, setLivePlayerIndex] = useState<number>();
+  const [rating, setRating] = useState<number>(0);
+  const [starRating, setStarRating] = useState<number>(0);
 
   const benchPlayerList = useStorage((root) => root.players);
   const fieldPlayerList = useStorage((root) => root.fieldPlayers);
@@ -74,6 +76,32 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
       formationName ? formationName.players : [...initFormation.players]
     );
   }
+
+  useEffect(() => {
+    function teamRating() {
+      if (fieldPlayerList.length == 0) {
+        return setRating(0);
+      }
+
+      let maxSum = 0;
+      for (let i = 0; i < fieldPlayerList.length; i++) {
+        maxSum += fieldPlayerList[i].overallRating;
+      }
+      let avg = maxSum / 11;
+
+      // Map the average score to a star rating from 0 to 5
+      var starRating = Math.round(avg / 20); // Assuming each star represents 20 units
+
+      // Ensure the star rating is within the range of 0 to 5
+      starRating = Math.max(0, Math.min(starRating, 5));
+
+      setStarRating(starRating);
+      setRating(Math.round(avg));
+
+      console.log("avg", Math.round(starRating));
+    }
+    teamRating();
+  }, [fieldPlayerList]);
 
   //When useffect run whenever current user changes formation
   useEffect(() => {
@@ -210,6 +238,11 @@ const FootballField: React.FC<{ formation: Formation[] }> = ({ formation }) => {
         alt="field"
         className="flex dark:bg-current pb-[3px]"
       />
+
+      <div className="absolute top-0 right-0 flex flex-col p-2 text-white">
+        <p>Team rating: {rating}</p>
+        <Rate allowHalf disabled defaultValue={0} value={starRating} />
+      </div>
 
       {formationState?.map((player, index) => (
         <Suspense

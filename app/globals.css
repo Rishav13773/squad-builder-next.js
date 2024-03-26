@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* body {
   background-color: #e5e5f7;
   opacity: 1;
   width: 100%;
@@ -13,4 +13,4 @@ body {
       #e5e5f7 30px
     ),
     repeating-linear-gradient(#ffb5b58a, #ffb8b8);
-}
+} */

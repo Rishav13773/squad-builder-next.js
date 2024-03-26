@@ -128,10 +128,11 @@ const SearchModal: React.FC<{
   return (
     <div>
       <Modal
-        title="Vertically centered modal dialog"
+        title="Search Player"
         centered
         visible={modalOpen}
         onOk={handleConfirm}
+        okType="default"
         onCancel={() => setModalOpen(false)}
       >
         <Select
